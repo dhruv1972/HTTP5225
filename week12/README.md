@@ -35,6 +35,3 @@ Uses existing "users" table with:
 - Password hashing
 - Simple responsive design
 
-## Created by: [Your Name]
-## Course: HTTP5225
-## Date: [Current Date] 
