@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add New User</title>
+    <title>Edit Course</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -12,16 +12,17 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="mb-0">Add New User</h3>
+                        <h3 class="mb-0">Edit Course</h3>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="{{ route('users.store') }}">
+                        <form method="POST" action="{{ route('courses.update', $course->id) }}">
                             @csrf
+                            @method('PUT')
                             
                             <div class="mb-3">
-                                <label for="name" class="form-label">Name</label>
+                                <label for="name" class="form-label">Course Name</label>
                                 <input type="text" class="form-control @error('name') is-invalid @enderror" 
-                                       id="name" name="name" value="{{ old('name') }}" required>
+                                       id="name" name="name" value="{{ old('name', $course->name) }}" required>
                                 @error('name')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -30,21 +31,10 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control @error('email') is-invalid @enderror" 
-                                       id="email" name="email" value="{{ old('email') }}" required>
-                                @error('email')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
-                                <input type="password" class="form-control @error('password') is-invalid @enderror" 
-                                       id="password" name="password" required>
-                                @error('password')
+                                <label for="description" class="form-label">Description</label>
+                                <textarea class="form-control @error('description') is-invalid @enderror" 
+                                          id="description" name="description" rows="4" required>{{ old('description', $course->description) }}</textarea>
+                                @error('description')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
@@ -53,9 +43,9 @@
 
                             <div class="d-flex gap-2">
                                 <button type="submit" class="btn btn-success">
-                                    <i class="bi bi-check-circle"></i> Add User
+                                    <i class="bi bi-check-circle"></i> Update Course
                                 </button>
-                                <a href="{{ route('users.index') }}" class="btn btn-secondary">
+                                <a href="{{ route('courses.index') }}" class="btn btn-secondary">
                                     <i class="bi bi-arrow-left"></i> Cancel
                                 </a>
                             </div>
@@ -68,4 +58,4 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html> 
+</html>

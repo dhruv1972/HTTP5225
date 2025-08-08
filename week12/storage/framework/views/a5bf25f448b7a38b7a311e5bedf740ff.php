@@ -1,85 +1,92 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Users List</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .btn {
-            padding: 5px 10px;
-            text-decoration: none;
-            margin: 2px;
-            border: none;
-            cursor: pointer;
-        }
-        .btn-primary { background: #007bff; color: white; }
-        .btn-info { background: #17a2b8; color: white; }
-        .btn-warning { background: #ffc107; color: black; }
-        .btn-danger { background: #dc3545; color: white; }
-        .alert {
-            padding: 10px;
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            color: #155724;
-            margin: 10px 0;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <h1>Users Management</h1>
-    
-    <?php if(session('success')): ?>
-        <div class="alert">
-            <?php echo e(session('success')); ?>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1>Users Management</h1>
+                    <div>
+                        <a href="<?php echo e(route('courses.index')); ?>" class="btn btn-outline-secondary me-2">Courses</a>
+                        <a href="<?php echo e(route('professors.index')); ?>" class="btn btn-outline-secondary me-2">Professors</a>
+                        <a href="<?php echo e(route('users.create')); ?>" class="btn btn-primary">
+                            <i class="bi bi-plus-circle"></i> Add New User
+                        </a>
+                    </div>
+                </div>
+                
+                <?php if(session('success')): ?>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <?php echo e(session('success')); ?>
 
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                <?php endif; ?>
+
+                <?php if(session('error')): ?>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <?php echo e(session('error')); ?>
+
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                <?php endif; ?>
+
+                <?php if($users->count() > 0): ?>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php $__currentLoopData = $users; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $user): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <tr>
+                                    <td><?php echo e($user->id); ?></td>
+                                    <td><?php echo e($user->name); ?></td>
+                                    <td><?php echo e($user->email); ?></td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="<?php echo e(route('users.show', $user->id)); ?>" class="btn btn-info btn-sm">
+                                                <i class="bi bi-eye"></i> View
+                                            </a>
+                                            <a href="<?php echo e(route('users.edit', $user->id)); ?>" class="btn btn-warning btn-sm">
+                                                <i class="bi bi-pencil"></i> Edit
+                                            </a>
+                                            <form style="display: inline;" method="POST" action="<?php echo e(route('users.destroy', $user->id)); ?>" 
+                                                  onsubmit="return confirm('Are you sure you want to delete this user?')">
+                                                <?php echo csrf_field(); ?>
+                                                <?php echo method_field('DELETE'); ?>
+                                                <button type="submit" class="btn btn-danger btn-sm">
+                                                    <i class="bi bi-trash"></i> Delete
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php else: ?>
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i> No users found. 
+                        <a href="<?php echo e(route('users.create')); ?>" class="alert-link">Add the first user</a>
+                    </div>
+                <?php endif; ?>
+            </div>
         </div>
-    <?php endif; ?>
+    </div>
 
-    <a href="<?php echo e(route('users.create')); ?>" class="btn btn-primary">Add New User</a>
-    
-    <br><br>
-
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Actions</th>
-        </tr>
-        <?php $__currentLoopData = $users; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $user): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-        <tr>
-            <td><?php echo e($user->id); ?></td>
-            <td><?php echo e($user->name); ?></td>
-            <td><?php echo e($user->email); ?></td>
-            <td>
-                <a href="<?php echo e(route('users.show', $user->id)); ?>" class="btn btn-info">View</a>
-                <a href="<?php echo e(route('users.edit', $user->id)); ?>" class="btn btn-warning">Edit</a>
-                <form style="display: inline;" method="POST" action="<?php echo e(route('users.destroy', $user->id)); ?>" onsubmit="return confirm('Delete this user?')">
-                    <?php echo csrf_field(); ?>
-                    <?php echo method_field('DELETE'); ?>
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </form>
-            </td>
-        </tr>
-        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-    </table>
-
-    <?php if($users->isEmpty()): ?>
-        <p>No users found. <a href="<?php echo e(route('users.create')); ?>">Add the first user</a></p>
-    <?php endif; ?>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html> <?php /**PATH C:\xampp\htdocs\HTTP5225\week12\resources\views/users/index.blade.php ENDPATH**/ ?>

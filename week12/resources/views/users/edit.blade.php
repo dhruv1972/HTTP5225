@@ -1,76 +1,73 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit User</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        .form-group {
-            margin: 15px 0;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        input[type="text"], input[type="email"], input[type="password"] {
-            width: 300px;
-            padding: 8px;
-            border: 1px solid #ddd;
-        }
-        .btn {
-            padding: 8px 15px;
-            margin: 5px;
-            border: none;
-            cursor: pointer;
-        }
-        .btn-success { background: #28a745; color: white; }
-        .btn-secondary { background: #6c757d; color: white; }
-        .error {
-            color: red;
-            font-size: 14px;
-        }
-        .note {
-            font-size: 12px;
-            color: #666;
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <h1>Edit User</h1>
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="mb-0">Edit User</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="{{ route('users.update', $user->id) }}">
+                            @csrf
+                            @method('PUT')
+                            
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" class="form-control @error('name') is-invalid @enderror" 
+                                       id="name" name="name" value="{{ old('name', $user->name) }}" required>
+                                @error('name')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
 
-    <form method="POST" action="{{ route('users.update', $user->id) }}">
-        @csrf
-        @method('PUT')
-        
-        <div class="form-group">
-            <label>Name:</label>
-            <input type="text" name="name" value="{{ old('name', $user->name) }}" required>
-            @error('name')
-                <div class="error">{{ $message }}</div>
-            @enderror
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control @error('email') is-invalid @enderror" 
+                                       id="email" name="email" value="{{ old('email', $user->email) }}" required>
+                                @error('email')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control @error('password') is-invalid @enderror" 
+                                       id="password" name="password" placeholder="Leave blank to keep current">
+                                <div class="form-text">Leave blank if you don't want to change password</div>
+                                @error('password')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="bi bi-check-circle"></i> Update User
+                                </button>
+                                <a href="{{ route('users.index') }}" class="btn btn-secondary">
+                                    <i class="bi bi-arrow-left"></i> Cancel
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
+    </div>
 
-        <div class="form-group">
-            <label>Email:</label>
-            <input type="email" name="email" value="{{ old('email', $user->email) }}" required>
-            @error('email')
-                <div class="error">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="form-group">
-            <label>Password:</label>
-            <input type="password" name="password" placeholder="Leave blank to keep current">
-            <div class="note">Leave blank if you don't want to change password</div>
-            @error('password')
-                <div class="error">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <button type="submit" class="btn btn-success">Update User</button>
-        <a href="{{ route('users.index') }}" class="btn btn-secondary">Cancel</a>
-    </form>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html> 

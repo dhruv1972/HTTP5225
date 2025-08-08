@@ -1,66 +1,62 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Details</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        .detail {
-            margin: 10px 0;
-            padding: 10px;
-            background: #f9f9f9;
-            border: 1px solid #ddd;
-        }
-        .label {
-            font-weight: bold;
-        }
-        .btn {
-            padding: 8px 15px;
-            margin: 5px;
-            border: none;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .btn-warning { background: #ffc107; color: black; }
-        .btn-secondary { background: #6c757d; color: white; }
-        .btn-danger { background: #dc3545; color: white; }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <h1>User Details</h1>
-
-    <div class="detail">
-        <div class="label">ID:</div>
-        <div>{{ $user->id }}</div>
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="mb-0">User Details</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-3 fw-bold">ID:</div>
+                            <div class="col-md-9">{{ $user->id }}</div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-3 fw-bold">Name:</div>
+                            <div class="col-md-9">{{ $user->name }}</div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-3 fw-bold">Email:</div>
+                            <div class="col-md-9">{{ $user->email }}</div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-3 fw-bold">Password:</div>
+                            <div class="col-md-9">••••••••••••</div>
+                        </div>
+                        
+                        <div class="d-flex gap-2">
+                            <a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning">
+                                <i class="bi bi-pencil"></i> Edit
+                            </a>
+                            <a href="{{ route('users.index') }}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Back
+                            </a>
+                            <form style="display: inline;" method="POST" action="{{ route('users.destroy', $user->id) }}" 
+                                  onsubmit="return confirm('Are you sure you want to delete this user?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="bi bi-trash"></i> Delete
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="detail">
-        <div class="label">Name:</div>
-        <div>{{ $user->name }}</div>
-    </div>
-
-    <div class="detail">
-        <div class="label">Email:</div>
-        <div>{{ $user->email }}</div>
-    </div>
-
-    <div class="detail">
-        <div class="label">Password:</div>
-        <div>••••••••••••</div>
-    </div>
-
-    <br>
-    
-    <a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning">Edit</a>
-    <a href="{{ route('users.index') }}" class="btn btn-secondary">Back</a>
-    
-    <form style="display: inline;" method="POST" action="{{ route('users.destroy', $user->id) }}" onsubmit="return confirm('Delete this user?')">
-        @csrf
-        @method('DELETE')
-        <button type="submit" class="btn btn-danger">Delete</button>
-    </form>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html> 

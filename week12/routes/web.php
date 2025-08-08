@@ -2,11 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CourseController;
+use App\Http\Controllers\ProfessorController;
 
-// Redirect home to users list
 Route::get('/', function () {
     return redirect()->route('users.index');
 });
 
-// User CRUD routes
-Route::resource('users', UserController::class); 
+Route::resource('users', UserController::class);
+Route::resource('courses', CourseController::class);
+Route::get('/professors', [ProfessorController::class, 'index'])->name('professors.index'); 

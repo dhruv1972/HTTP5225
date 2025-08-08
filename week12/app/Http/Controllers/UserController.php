@@ -8,77 +8,93 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    // Show all users
     public function index()
     {
-        $users = User::all();
-        return view('users.index', compact('users'));
+        try {
+            $users = User::all();
+            return view('users.index', compact('users'));
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error loading users: ' . $e->getMessage());
+        }
     }
 
-    // Show create form
     public function create()
     {
         return view('users.create');
     }
 
-    // Save new user
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|string|min:6'
-        ]);
+        try {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:users',
+                'password' => 'required|string|min:6'
+            ]);
 
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password)
-        ]);
+            User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password)
+            ]);
 
-        return redirect()->route('users.index')->with('success', 'User created successfully.');
+            return redirect()->route('users.index')->with('success', 'User added successfully.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()->withErrors($e->validator)->withInput();
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error creating user: ' . $e->getMessage())->withInput();
+        }
     }
 
-    // Show single user
     public function show(User $user)
     {
-        return view('users.show', compact('user'));
+        try {
+            return view('users.show', compact('user'));
+        } catch (\Exception $e) {
+            return redirect()->route('users.index')->with('error', 'Error loading user details.');
+        }
     }
 
-    // Show edit form
     public function edit(User $user)
     {
         return view('users.edit', compact('user'));
     }
 
-    // Update user
     public function update(Request $request, User $user)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'password' => 'nullable|string|min:6'
-        ]);
+        try {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:users,email,' . $user->id,
+                'password' => 'nullable|string|min:6'
+            ]);
 
-        $updateData = [
-            'name' => $request->name,
-            'email' => $request->email,
-        ];
+            $updateData = [
+                'name' => $request->name,
+                'email' => $request->email,
+            ];
 
-        // only update password if provided
-        if ($request->password) {
-            $updateData['password'] = Hash::make($request->password);
+            if ($request->password) {
+                $updateData['password'] = Hash::make($request->password);
+            }
+
+            $user->update($updateData);
+
+            return redirect()->route('users.index')->with('success', 'User updated successfully.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()->withErrors($e->validator)->withInput();
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error updating user: ' . $e->getMessage())->withInput();
         }
-
-        $user->update($updateData);
-
-        return redirect()->route('users.index')->with('success', 'User updated successfully.');
     }
 
-    // Delete user
     public function destroy(User $user)
     {
-        $user->delete();
-        return redirect()->route('users.index')->with('success', 'User deleted successfully.');
+        try {
+            $user->delete();
+            return redirect()->route('users.index')->with('success', 'User deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('users.index')->with('error', 'Error deleting user: ' . $e->getMessage());
+        }
     }
 } 
