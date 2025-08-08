@@ -70,6 +70,3 @@ My Week 12 assignment for HTTP5225. This is a simple CRUD app with users, course
 - Click "Professors" button to see professors
 - Each page has navigation buttons
 
-## Created by: [Your Name]
-## Course: HTTP5225
-## Date: [Current Date] 
