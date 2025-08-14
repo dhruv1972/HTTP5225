@@ -34,6 +34,24 @@
                             <div class="col-md-3 fw-bold">Password:</div>
                             <div class="col-md-9">••••••••••••</div>
                         </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-3 fw-bold">Enrolled Courses:</div>
+                            <div class="col-md-9">
+                                <?php if($user->courses->count() > 0): ?>
+                                    <?php $__currentLoopData = $user->courses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $course): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <div class="mb-2">
+                                            <span class="badge bg-primary me-2"><?php echo e($course->name); ?></span>
+                                            <?php if($course->professor): ?>
+                                                <small class="text-muted">Professor: <?php echo e($course->professor->name); ?></small>
+                                            <?php endif; ?>
+                                        </div>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                <?php else: ?>
+                                    <span class="text-muted">No courses enrolled</span>
+                                <?php endif; ?>
+                            </div>
+                        </div>
                         
                         <div class="d-flex gap-2">
                             <a href="<?php echo e(route('users.edit', $user->id)); ?>" class="btn btn-warning">
