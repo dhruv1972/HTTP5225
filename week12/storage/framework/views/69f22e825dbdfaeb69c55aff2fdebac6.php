@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit User</title>
+    <title>Edit Course</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -12,15 +12,15 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="mb-0">Edit User</h3>
+                        <h3 class="mb-0">Edit Course</h3>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="<?php echo e(route('users.update', $user->id)); ?>">
+                        <form method="POST" action="<?php echo e(route('courses.update', $course->id)); ?>">
                             <?php echo csrf_field(); ?>
                             <?php echo method_field('PUT'); ?>
                             
                             <div class="mb-3">
-                                <label for="name" class="form-label">Name</label>
+                                <label for="name" class="form-label">Course Name</label>
                                 <input type="text" class="form-control <?php $__errorArgs = ['name'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -29,7 +29,7 @@ $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>" 
-                                       id="name" name="name" value="<?php echo e(old('name', $user->name)); ?>" required>
+                                       id="name" name="name" value="<?php echo e(old('name', $course->name)); ?>" required>
                                 <?php $__errorArgs = ['name'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -46,8 +46,8 @@ unset($__errorArgs, $__bag); ?>
                             </div>
 
                             <div class="mb-3">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control <?php $__errorArgs = ['email'];
+                                <label for="description" class="form-label">Description</label>
+                                <textarea class="form-control <?php $__errorArgs = ['description'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -55,8 +55,8 @@ $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>" 
-                                       id="email" name="email" value="<?php echo e(old('email', $user->email)); ?>" required>
-                                <?php $__errorArgs = ['email'];
+                                          id="description" name="description" rows="4" required><?php echo e(old('description', $course->description)); ?></textarea>
+                                <?php $__errorArgs = ['description'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -72,8 +72,8 @@ unset($__errorArgs, $__bag); ?>
                             </div>
 
                             <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
-                                <input type="password" class="form-control <?php $__errorArgs = ['password'];
+                                <label for="professor_id" class="form-label">Professor</label>
+                                <select class="form-select <?php $__errorArgs = ['professor_id'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -81,9 +81,17 @@ $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>" 
-                                       id="password" name="password" placeholder="Leave blank to keep current">
-                                <div class="form-text">Leave blank if you don't want to change password</div>
-                                <?php $__errorArgs = ['password'];
+                                        id="professor_id" name="professor_id">
+                                    <option value="">Select a professor (optional)</option>
+                                    <?php $__currentLoopData = $professors; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $professor): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <option value="<?php echo e($professor->id); ?>" 
+                                                <?php echo e(old('professor_id', $course->professor_id) == $professor->id ? 'selected' : ''); ?>>
+                                            <?php echo e($professor->name); ?>
+
+                                        </option>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                </select>
+                                <?php $__errorArgs = ['professor_id'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -96,42 +104,13 @@ $message = $__bag->first($__errorArgs[0]); ?>
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label">Select Courses</label>
-                                <?php if($courses->count() > 0): ?>
-                                    <div class="row">
-                                        <?php $__currentLoopData = $courses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $course): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                            <div class="col-md-6">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" 
-                                                           name="courses[]" value="<?php echo e($course->id); ?>" 
-                                                           id="course_<?php echo e($course->id); ?>"
-                                                           <?php echo e(in_array($course->id, old('courses', $user->courses->pluck('id')->toArray())) ? 'checked' : ''); ?>>
-                                                    <label class="form-check-label" for="course_<?php echo e($course->id); ?>">
-                                                        <?php echo e($course->name); ?>
-
-                                                        <?php if($course->professor): ?>
-                                                            <small class="text-muted">(Prof. <?php echo e($course->professor->name); ?>)</small>
-                                                        <?php endif; ?>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                    </div>
-                                <?php else: ?>
-                                    <div class="alert alert-warning">
-                                        No courses available. <a href="<?php echo e(route('courses.create')); ?>">Create a course first</a>
-                                    </div>
-                                <?php endif; ?>
                             </div>
 
                             <div class="d-flex gap-2">
                                 <button type="submit" class="btn btn-success">
-                                    <i class="bi bi-check-circle"></i> Update User
+                                    <i class="bi bi-check-circle"></i> Update Course
                                 </button>
-                                <a href="<?php echo e(route('users.index')); ?>" class="btn btn-secondary">
+                                <a href="<?php echo e(route('courses.index')); ?>" class="btn btn-secondary">
                                     <i class="bi bi-arrow-left"></i> Cancel
                                 </a>
                             </div>
@@ -144,4 +123,5 @@ unset($__errorArgs, $__bag); ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html> <?php /**PATH C:\xampp\htdocs\HTTP5225\week12\resources\views/users/edit.blade.php ENDPATH**/ ?>
+</html>
+<?php /**PATH C:\xampp\htdocs\HTTP5225\week12\resources\views/courses/edit.blade.php ENDPATH**/ ?>

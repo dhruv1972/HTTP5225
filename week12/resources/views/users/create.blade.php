@@ -51,6 +51,34 @@
                                 @enderror
                             </div>
 
+                            <div class="mb-3">
+                                <label class="form-label">Select Courses</label>
+                                @if($courses->count() > 0)
+                                    <div class="row">
+                                        @foreach($courses as $course)
+                                            <div class="col-md-6">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" 
+                                                           name="courses[]" value="{{ $course->id }}" 
+                                                           id="course_{{ $course->id }}"
+                                                           {{ in_array($course->id, old('courses', [])) ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="course_{{ $course->id }}">
+                                                        {{ $course->name }}
+                                                        @if($course->professor)
+                                                            <small class="text-muted">(Prof. {{ $course->professor->name }})</small>
+                                                        @endif
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <div class="alert alert-warning">
+                                        No courses available. <a href="{{ route('courses.create') }}">Create a course first</a>
+                                    </div>
+                                @endif
+                            </div>
+
                             <div class="d-flex gap-2">
                                 <button type="submit" class="btn btn-success">
                                     <i class="bi bi-check-circle"></i> Add User

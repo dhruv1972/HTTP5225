@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use App\Models\Professor;
 use Illuminate\Http\Request;
 
 class CourseController extends Controller
@@ -10,7 +11,7 @@ class CourseController extends Controller
     public function index()
     {
         try {
-            $courses = Course::all();
+            $courses = Course::with(['professor', 'users'])->get();
             return view('courses.index', compact('courses'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Error loading courses: ' . $e->getMessage());
@@ -19,7 +20,8 @@ class CourseController extends Controller
 
     public function create()
     {
-        return view('courses.create');
+        $professors = Professor::all();
+        return view('courses.create', compact('professors'));
     }
 
     public function store(Request $request)
@@ -27,12 +29,14 @@ class CourseController extends Controller
         try {
             $request->validate([
                 'name' => 'required|string|max:255',
-                'description' => 'required|string'
+                'description' => 'required|string',
+                'professor_id' => 'nullable|exists:professors,id'
             ]);
 
             Course::create([
                 'name' => $request->name,
-                'description' => $request->description
+                'description' => $request->description,
+                'professor_id' => $request->professor_id
             ]);
 
             return redirect()->route('courses.index')->with('success', 'Course added successfully.');
@@ -46,6 +50,7 @@ class CourseController extends Controller
     public function show(Course $course)
     {
         try {
+            $course->load(['professor', 'users']);
             return view('courses.show', compact('course'));
         } catch (\Exception $e) {
             return redirect()->route('courses.index')->with('error', 'Error loading course details.');
@@ -54,7 +59,8 @@ class CourseController extends Controller
 
     public function edit(Course $course)
     {
-        return view('courses.edit', compact('course'));
+        $professors = Professor::all();
+        return view('courses.edit', compact('course', 'professors'));
     }
 
     public function update(Request $request, Course $course)
@@ -62,12 +68,14 @@ class CourseController extends Controller
         try {
             $request->validate([
                 'name' => 'required|string|max:255',
-                'description' => 'required|string'
+                'description' => 'required|string',
+                'professor_id' => 'nullable|exists:professors,id'
             ]);
 
             $course->update([
                 'name' => $request->name,
-                'description' => $request->description
+                'description' => $request->description,
+                'professor_id' => $request->professor_id
             ]);
 
             return redirect()->route('courses.index')->with('success', 'Course updated successfully.');

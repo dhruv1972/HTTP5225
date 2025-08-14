@@ -11,6 +11,17 @@ class Course extends Model
 
     protected $fillable = [
         'name',
-        'description'
+        'description',
+        'professor_id'
     ];
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
+
+    public function professor()
+    {
+        return $this->belongsTo(Professor::class);
+    }
 }

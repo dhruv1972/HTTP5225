@@ -34,6 +34,24 @@
                             <div class="col-md-3 fw-bold">Password:</div>
                             <div class="col-md-9">••••••••••••</div>
                         </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-3 fw-bold">Enrolled Courses:</div>
+                            <div class="col-md-9">
+                                @if($user->courses->count() > 0)
+                                    @foreach($user->courses as $course)
+                                        <div class="mb-2">
+                                            <span class="badge bg-primary me-2">{{ $course->name }}</span>
+                                            @if($course->professor)
+                                                <small class="text-muted">Professor: {{ $course->professor->name }}</small>
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <span class="text-muted">No courses enrolled</span>
+                                @endif
+                            </div>
+                        </div>
                         
                         <div class="d-flex gap-2">
                             <a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning">

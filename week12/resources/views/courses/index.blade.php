@@ -14,6 +14,7 @@
                     <h1>Courses Management</h1>
                     <div>
                         <a href="{{ route('users.index') }}" class="btn btn-outline-secondary me-2">Users</a>
+                        <a href="{{ route('professors.index') }}" class="btn btn-outline-secondary me-2">Professors</a>
                         <a href="{{ route('courses.create') }}" class="btn btn-primary">
                             <i class="bi bi-plus-circle"></i> Add New Course
                         </a>
@@ -42,6 +43,8 @@
                                     <th>ID</th>
                                     <th>Name</th>
                                     <th>Description</th>
+                                    <th>Professor</th>
+                                    <th>Students</th>
                                     <th>Created</th>
                                     <th>Actions</th>
                                 </tr>
@@ -52,6 +55,16 @@
                                     <td>{{ $course->id }}</td>
                                     <td>{{ $course->name }}</td>
                                     <td>{{ Str::limit($course->description, 100) }}</td>
+                                    <td>
+                                        @if($course->professor)
+                                            <span class="badge bg-success">{{ $course->professor->name }}</span>
+                                        @else
+                                            <span class="text-muted">No professor</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info">{{ $course->users->count() }} students</span>
+                                    </td>
                                     <td>{{ $course->created_at->format('M d, Y') }}</td>
                                     <td>
                                         <div class="btn-group" role="group">

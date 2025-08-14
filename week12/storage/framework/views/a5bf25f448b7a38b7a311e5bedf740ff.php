@@ -45,6 +45,7 @@
                                     <th>ID</th>
                                     <th>Name</th>
                                     <th>Email</th>
+                                    <th>Enrolled Courses</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -54,6 +55,15 @@
                                     <td><?php echo e($user->id); ?></td>
                                     <td><?php echo e($user->name); ?></td>
                                     <td><?php echo e($user->email); ?></td>
+                                    <td>
+                                        <?php if($user->courses->count() > 0): ?>
+                                            <?php $__currentLoopData = $user->courses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $course): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <span class="badge bg-info me-1"><?php echo e($course->name); ?></span>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                        <?php else: ?>
+                                            <span class="text-muted">No courses</span>
+                                        <?php endif; ?>
+                                    </td>
                                     <td>
                                         <div class="btn-group" role="group">
                                             <a href="<?php echo e(route('users.show', $user->id)); ?>" class="btn btn-info btn-sm">

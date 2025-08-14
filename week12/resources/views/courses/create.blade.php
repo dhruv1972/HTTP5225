@@ -40,6 +40,25 @@
                                 @enderror
                             </div>
 
+                            <div class="mb-3">
+                                <label for="professor_id" class="form-label">Professor</label>
+                                <select class="form-select @error('professor_id') is-invalid @enderror" 
+                                        id="professor_id" name="professor_id">
+                                    <option value="">Select a professor (optional)</option>
+                                    @foreach($professors as $professor)
+                                        <option value="{{ $professor->id }}" 
+                                                {{ old('professor_id') == $professor->id ? 'selected' : '' }}>
+                                            {{ $professor->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('professor_id')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+
                             <div class="d-flex gap-2">
                                 <button type="submit" class="btn btn-success">
                                     <i class="bi bi-check-circle"></i> Add Course

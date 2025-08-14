@@ -31,6 +31,36 @@
                         </div>
                         
                         <div class="row mb-3">
+                            <div class="col-md-3 fw-bold">Professor:</div>
+                            <div class="col-md-9">
+                                @if($course->professor)
+                                    <span class="badge bg-success">{{ $course->professor->name }}</span>
+                                @else
+                                    <span class="text-muted">No professor assigned</span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-3 fw-bold">Enrolled Students:</div>
+                            <div class="col-md-9">
+                                @if($course->users->count() > 0)
+                                    <div class="mb-2">
+                                        <span class="badge bg-info">{{ $course->users->count() }} students enrolled</span>
+                                    </div>
+                                    @foreach($course->users as $user)
+                                        <div class="mb-1">
+                                            <span class="badge bg-secondary me-2">{{ $user->name }}</span>
+                                            <small class="text-muted">{{ $user->email }}</small>
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <span class="text-muted">No students enrolled</span>
+                                @endif
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
                             <div class="col-md-3 fw-bold">Created:</div>
                             <div class="col-md-9">{{ $course->created_at->format('F j, Y g:i A') }}</div>
                         </div>

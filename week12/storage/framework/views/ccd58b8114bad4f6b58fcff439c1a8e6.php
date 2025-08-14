@@ -70,6 +70,41 @@ endif;
 unset($__errorArgs, $__bag); ?>
                             </div>
 
+                            <div class="mb-3">
+                                <label for="professor_id" class="form-label">Professor</label>
+                                <select class="form-select <?php $__errorArgs = ['professor_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" 
+                                        id="professor_id" name="professor_id">
+                                    <option value="">Select a professor (optional)</option>
+                                    <?php $__currentLoopData = $professors; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $professor): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <option value="<?php echo e($professor->id); ?>" 
+                                                <?php echo e(old('professor_id') == $professor->id ? 'selected' : ''); ?>>
+                                            <?php echo e($professor->name); ?>
+
+                                        </option>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                </select>
+                                <?php $__errorArgs = ['professor_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                    <div class="invalid-feedback">
+                                        <?php echo e($message); ?>
+
+                                    </div>
+                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                            </div>
+
                             <div class="d-flex gap-2">
                                 <button type="submit" class="btn btn-success">
                                     <i class="bi bi-check-circle"></i> Add Course

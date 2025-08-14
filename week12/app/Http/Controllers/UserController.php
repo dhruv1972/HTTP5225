@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Course;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -11,7 +12,7 @@ class UserController extends Controller
     public function index()
     {
         try {
-            $users = User::all();
+            $users = User::with('courses')->get();
             return view('users.index', compact('users'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Error loading users: ' . $e->getMessage());
@@ -20,7 +21,8 @@ class UserController extends Controller
 
     public function create()
     {
-        return view('users.create');
+        $courses = Course::all();
+        return view('users.create', compact('courses'));
     }
 
     public function store(Request $request)
@@ -29,14 +31,19 @@ class UserController extends Controller
             $request->validate([
                 'name' => 'required|string|max:255',
                 'email' => 'required|email|unique:users',
-                'password' => 'required|string|min:6'
+                'password' => 'required|string|min:6',
+                'courses' => 'array'
             ]);
 
-            User::create([
+            $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password)
             ]);
+
+            if ($request->courses) {
+                $user->courses()->attach($request->courses);
+            }
 
             return redirect()->route('users.index')->with('success', 'User added successfully.');
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -49,6 +56,7 @@ class UserController extends Controller
     public function show(User $user)
     {
         try {
+            $user->load('courses');
             return view('users.show', compact('user'));
         } catch (\Exception $e) {
             return redirect()->route('users.index')->with('error', 'Error loading user details.');
@@ -57,7 +65,9 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        return view('users.edit', compact('user'));
+        $courses = Course::all();
+        $user->load('courses');
+        return view('users.edit', compact('user', 'courses'));
     }
 
     public function update(Request $request, User $user)
@@ -66,7 +76,8 @@ class UserController extends Controller
             $request->validate([
                 'name' => 'required|string|max:255',
                 'email' => 'required|email|unique:users,email,' . $user->id,
-                'password' => 'nullable|string|min:6'
+                'password' => 'nullable|string|min:6',
+                'courses' => 'array'
             ]);
 
             $updateData = [
@@ -79,6 +90,12 @@ class UserController extends Controller
             }
 
             $user->update($updateData);
+
+            if ($request->courses) {
+                $user->courses()->sync($request->courses);
+            } else {
+                $user->courses()->detach();
+            }
 
             return redirect()->route('users.index')->with('success', 'User updated successfully.');
         } catch (\Illuminate\Validation\ValidationException $e) {

@@ -14,6 +14,7 @@
                     <h1>Courses Management</h1>
                     <div>
                         <a href="<?php echo e(route('users.index')); ?>" class="btn btn-outline-secondary me-2">Users</a>
+                        <a href="<?php echo e(route('professors.index')); ?>" class="btn btn-outline-secondary me-2">Professors</a>
                         <a href="<?php echo e(route('courses.create')); ?>" class="btn btn-primary">
                             <i class="bi bi-plus-circle"></i> Add New Course
                         </a>
@@ -44,6 +45,8 @@
                                     <th>ID</th>
                                     <th>Name</th>
                                     <th>Description</th>
+                                    <th>Professor</th>
+                                    <th>Students</th>
                                     <th>Created</th>
                                     <th>Actions</th>
                                 </tr>
@@ -54,6 +57,16 @@
                                     <td><?php echo e($course->id); ?></td>
                                     <td><?php echo e($course->name); ?></td>
                                     <td><?php echo e(Str::limit($course->description, 100)); ?></td>
+                                    <td>
+                                        <?php if($course->professor): ?>
+                                            <span class="badge bg-success"><?php echo e($course->professor->name); ?></span>
+                                        <?php else: ?>
+                                            <span class="text-muted">No professor</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info"><?php echo e($course->users->count()); ?> students</span>
+                                    </td>
                                     <td><?php echo e($course->created_at->format('M d, Y')); ?></td>
                                     <td>
                                         <div class="btn-group" role="group">

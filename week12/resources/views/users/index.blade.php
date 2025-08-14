@@ -43,6 +43,7 @@
                                     <th>ID</th>
                                     <th>Name</th>
                                     <th>Email</th>
+                                    <th>Enrolled Courses</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -52,6 +53,15 @@
                                     <td>{{ $user->id }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
+                                    <td>
+                                        @if($user->courses->count() > 0)
+                                            @foreach($user->courses as $course)
+                                                <span class="badge bg-info me-1">{{ $course->name }}</span>
+                                            @endforeach
+                                        @else
+                                            <span class="text-muted">No courses</span>
+                                        @endif
+                                    </td>
                                     <td>
                                         <div class="btn-group" role="group">
                                             <a href="{{ route('users.show', $user->id) }}" class="btn btn-info btn-sm">
