@@ -1,26 +1,29 @@
 # Laravel CRUD Application
 
-My Week 12 assignment for HTTP5225. This is a simple CRUD app with users, courses, and professors.
+My Week 12 assignment for HTTP5225. This is a simple CRUD app with users, courses, and professors with relationships.
 
 ## What it does
 
 ### Users
 - Add new users (with password hashing)
-- View all users in a table
-- Edit user info (optional password change)
+- Select courses when adding users (many-to-many)
+- View all users in a table with enrolled courses
+- Edit user info and course selections
 - Delete users
-- Show individual user details
+- Show individual user details with course info
 
 ### Courses  
 - Add new courses with name and description
-- View all courses in a table
-- Edit course info
+- Assign professors to courses (one-to-one)
+- View all courses in a table with professor and student count
+- Edit course info and professor assignment
 - Delete courses
-- Show individual course details
+- Show individual course details with professor and enrolled students
 
 ### Professors
 - Database table with 10 fake professors
-- Just shows the seeded data for now
+- Can be assigned to courses
+- Shows which course they teach
 
 ## Setup
 
@@ -46,6 +49,7 @@ My Week 12 assignment for HTTP5225. This is a simple CRUD app with users, course
 - id
 - name
 - description
+- professor_id (foreign key)
 - created_at
 - updated_at
 
@@ -55,6 +59,18 @@ My Week 12 assignment for HTTP5225. This is a simple CRUD app with users, course
 - created_at
 - updated_at
 
+### Course_User (pivot table)
+- id
+- course_id
+- user_id
+- created_at
+- updated_at
+
+## Relationships
+
+- **Users ↔ Courses**: Many-to-many (students can enroll in multiple courses)
+- **Professors ↔ Courses**: One-to-one (each course has one professor)
+
 ## Features
 
 - Bootstrap styling for all pages
@@ -62,11 +78,18 @@ My Week 12 assignment for HTTP5225. This is a simple CRUD app with users, course
 - Form validation
 - Password hashing
 - Responsive design
+- Course selection when adding users
+- Professor assignment when creating courses
+- Relationship display in all views
 
 ## Navigation
 
-- Home page shows Users list
-- Click "Courses" button to see courses
+- Home page shows Users list with enrolled courses
+- Click "Courses" button to see courses with professors
 - Click "Professors" button to see professors
 - Each page has navigation buttons
+
+## Created by: [Your Name]
+## Course: HTTP5225
+## Date: [Current Date]
 
